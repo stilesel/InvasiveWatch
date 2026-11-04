@@ -8,7 +8,7 @@ from pathlib import Path
 
 API_URL = 'https://api.inaturalist.org/v2/observations'
 
-DATA_FILE = Path("data/observations.csv")
+DATA_FILE = Path("docs/data/observations.csv")
 
 FIELDNAMES = [
     "id",
