@@ -4,7 +4,7 @@
 // id,place_id,country,state,city,species,common_name,longitude,latitude,observed_on
 
 console.log("NEW SCRIPT.JS LOADED");
-const CSV_PATH = "./data/observations.csv";
+const CSV_PATH = "data/observations.csv";
 
 const ANN_ARBOR_CENTER = [42.2808, -83.7430];
 const INITIAL_ZOOM = 12;
