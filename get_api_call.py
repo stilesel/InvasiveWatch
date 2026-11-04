@@ -12,13 +12,18 @@ DATA_FILE = Path("data/observations.csv")
 
 FIELDNAMES = [
     "id",
+    "place_id",
+    "country",
+    "state",
+    "city",
     "species",
+    "common_name",
     "longitude",
     "latitude",
     "observed_on"
 ]
 
-def get_posts(species_name, earliest_date, num_results=50):
+def get_posts(species_name, earliest_date, location):
     session = requests.Session()
 
     session.headers.update({
@@ -26,12 +31,10 @@ def get_posts(species_name, earliest_date, num_results=50):
     })
 
     assert_valid_date(earliest_date)
-    assert type(num_results) is int, "num_results must be an int"
-    assert num_results <= 10000, "Cannot get more than 10000 results"
 
     params = {
-        "fields": ["id","observed_on","geojson","taxon"], 
-        "place_id": "50095",
+        "fields": "id,observed_on,geojson,taxon.id,taxon.name,taxon.preferred_common_name", 
+        "place_id": location["place_id"],
         "d1": earliest_date,
         "taxon_name": species_name,
         "quality_grade": "research",
@@ -66,9 +69,18 @@ def get_posts(species_name, earliest_date, num_results=50):
                 if not coordinates:
                     continue
 
+                taxon = observation.get("taxon") or {}
+
                 observations.append({
                     "id": observation["id"],
+                    "place_id": location["place_id"],
+                    "country": location["country"],
+                    "state": location.get("state", ""),
+                    "city": location["city"],
                     "species": species_name,
+                    "common_name": taxon.get(
+                        "preferred_common_name", ""
+                    ),
                     "longitude": coordinates[0],
                     "latitude": coordinates[1],
                     "observed_on": observation.get("observed_on")
@@ -87,24 +99,27 @@ def get_posts(species_name, earliest_date, num_results=50):
 
     except requests.exceptions.RequestException as e:
         # Handle any network-related errors or exceptions
-        print(f"API request failed: {e}")
+        print(f"API request failed for {species_name} in {location["city"]}: {e}")   
         return None
 
 def posts_to_csv(posts):
     DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-    existing_ids = set()
+    existing_observations = set()
 
     if DATA_FILE.exists():
         with open(DATA_FILE, "r", newline="") as file:
             reader = csv.DictReader(file)
-            existing_ids = {
-                row["id"] for row in reader
-            }
+
+            for row in reader:
+                # An observation is unique to its ID and location
+                existing_observations.add(
+                    (row.get("id"), row.get("place_id"))
+                )
 
     new_posts = [
         post for post in posts
-        if str(post["id"]) not in existing_ids
+        if (str(post["id"]), post["place_id"]) not in existing_observations
     ]
 
     if not new_posts:

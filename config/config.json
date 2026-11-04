@@ -1,6 +1,13 @@
 {
-    "place_id": 50095,
     "starting_date": "2022-10-29",
+    "locations": [
+        {
+            "place_id": 50095,
+            "country": "United States",
+            "state": "Michigan",
+            "city": "Ann Arbor"
+        }
+    ],
     "species": [
         {
             "name": "Lonicera maackii"

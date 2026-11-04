@@ -28,16 +28,38 @@ def main():
 
     print(f"Collecting observations since {earliest_date}")
 
-    # Retrieve observations for every supported species
-    for species in config["species"]:
-        posts = get_api_call.get_posts(
-            species["name"],
-            earliest_date
+    all_posts = []
+
+    # Retrieve observations for every location and species
+    for location in config["locations"]:
+        print(
+            f"\nCollecting observations in "
+            f"{location['city']}, {location['state']}, "
+            f"{location['country']}..."
         )
 
-        get_api_call.posts_to_csv(posts)
+        for species in config["species"]:
+            print(f"Searching for {species['name']}...")
 
-    # Only update the date after all species succeed
+            posts = get_api_call.get_posts(
+                species["name"],
+                earliest_date,
+                location
+            )
+
+            # Do not update last_run if any API request fails
+            if posts is None:
+                raise RuntimeError(
+                    f"Failed to retrieve {species['name']} "
+                    f"in {location['city']}"
+                )
+
+            all_posts.extend(posts)
+
+    # Save all collected observations
+    get_api_call.posts_to_csv(all_posts)
+
+    # Only update the date after all species and locations succeed
     LAST_RUN_FILE.parent.mkdir(parents=True, exist_ok=True)
 
     with open(LAST_RUN_FILE, "w") as file:
@@ -47,7 +69,7 @@ def main():
             indent=4
         )
 
-    print("InvasiveWatch collection completed!")
+    print("\nInvasiveWatch collection completed!")
 
 
 if __name__ == "__main__":
