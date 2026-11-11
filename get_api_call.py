@@ -112,14 +112,11 @@ def posts_to_csv(posts):
             reader = csv.DictReader(file)
 
             for row in reader:
-                # An observation is unique to its ID and location
-                existing_observations.add(
-                    (row.get("id"), row.get("place_id"))
-                )
+                existing_observations.add(str(row.get("id")))
 
     new_posts = [
         post for post in posts
-        if (str(post["id"]), post["place_id"]) not in existing_observations
+        if str(post["id"]) not in existing_observations
     ]
 
     if not new_posts:
