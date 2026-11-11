@@ -35,6 +35,13 @@ if (!map) {
 // Layer to hold all observation markers
 const markerLayer = L.layerGroup().addTo(map);
 
+// Heat map layer
+let heatLayer = null;
+
+// Track whether heat-map mode is enabled
+const heatmapToggle = document.getElementById("heatmap-toggle");
+let heatmapEnabled = false; 
+
 // Keep track of markers by their iNaturalist observation ID
 const markersById = new Map();
 
@@ -366,6 +373,41 @@ function renderMarkers(observations) {
     });
 }
 
+// Display observations as a heat map
+// Display observations as a heat map
+// Display observations as a heat map
+function renderHeatMap(observations) {
+
+    // Remove any previously created heat map
+    if (heatLayer && map.hasLayer(heatLayer)) {
+        map.removeLayer(heatLayer);
+    }
+
+    // Hide individual observation pins
+    if (map.hasLayer(markerLayer)) {
+        map.removeLayer(markerLayer);
+    }
+
+    // Convert observations into heat-map coordinates
+    const heatPoints = observations.map(observation => [
+        observation.latitude,
+        observation.longitude,
+        0.6
+    ]);
+
+    // Create a fresh heat-map layer
+    heatLayer = L.heatLayer(heatPoints, {
+        radius: 25,
+        blur: 18,
+        maxZoom: 17,
+        max: 1,
+        minOpacity: 0.3
+    });
+
+    // Add the new heat map to the map
+    heatLayer.addTo(map);
+}
+
 // Display the observations currently shown on the map
 function renderObservationList(observations) {
 
@@ -447,6 +489,17 @@ function renderObservationList(observations) {
         // Zoom to the matching marker when clicked
         item.addEventListener("click", () => {
 
+            // Switch back to individual pins if heat-map mode is active
+            if (heatmapEnabled) {
+                heatmapEnabled = false;
+
+                if (heatmapToggle) {
+                    heatmapToggle.checked = false;
+                }
+
+                applyFilters();
+            }
+
             const marker = markersById.get(String(observation.id));
 
             if (!marker) return;
@@ -471,10 +524,36 @@ function renderObservationList(observations) {
 }
 
 // Apply filters and update the map
+// Apply filters and update the map
+// Apply filters and update the map
+// Apply filters and update the map
 function applyFilters() {
+
     const filtered = getFilteredObservations();
 
-    renderMarkers(filtered);
+    if (heatmapEnabled) {
+
+        // Display heat map
+        renderHeatMap(filtered);
+
+    } else {
+
+        // Remove heat map if it exists
+        if (heatLayer && map.hasLayer(heatLayer)) {
+            map.removeLayer(heatLayer);
+        }
+
+        heatLayer = null;
+
+        // Display individual observation pins
+        if (!map.hasLayer(markerLayer)) {
+            markerLayer.addTo(map);
+        }
+
+        renderMarkers(filtered);
+    }
+
+    // Update the observation list and statistics
     renderObservationList(filtered);
     updateStatistics(filtered);
 }
@@ -584,6 +663,11 @@ async function loadObservations() {
 speciesFilter?.addEventListener("change", applyFilters);
 startDateFilter?.addEventListener("change", applyFilters);
 endDateFilter?.addEventListener("change", applyFilters);
+// Toggle between observation pins and heat-map display
+heatmapToggle?.addEventListener("change", () => {
+    heatmapEnabled = heatmapToggle.checked;
+    applyFilters();
+});
 
 
 // Reset filters button

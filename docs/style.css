@@ -561,3 +561,44 @@ h1, h2, p {
   padding-right: var(--page-gutter);
 }
 
+/* ========================================
+   MAP DISPLAY OPTIONS
+======================================== */
+
+.map-options {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 12px 0 16px;
+}
+
+.heatmap-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--forest);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.heatmap-label input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--forest);
+    cursor: pointer;
+}
+
+.heatmap-description {
+    color: var(--muted);
+    font-size: 0.82rem;
+}
+
+@media (max-width: 600px) {
+    .map-options {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+    }
+}

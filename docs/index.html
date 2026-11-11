@@ -24,6 +24,9 @@
         crossorigin=""
     ></script>
 
+    <!-- Leaflet Heat plugin -->
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+
     <!-- PapaParse for reading CSV data -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.0/papaparse.min.js"></script>
 
@@ -81,6 +84,17 @@
                     <p>Explore where invasive species have been observed.</p>
                 </div>
             </div>
+
+            <div class="map-options">
+                <label for="heatmap-toggle" class="heatmap-label">
+                    <input type="checkbox" id="heatmap-toggle">
+                    Show Heat Map
+                </label>
+                <span class="heatmap-description">
+                    View areas with higher concentrations of observations.
+                </span>
+            </div>
+
 
             <!-- Leaflet map container -->
             <div id="map"></div>
