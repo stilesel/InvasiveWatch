@@ -38,7 +38,7 @@ def get_posts(species_name, earliest_date, location):
         "d1": earliest_date,
         "taxon_name": species_name,
         "quality_grade": "research",
-        "per_page": 200,
+        "per_page": 500,
         "page": 1
     }
 

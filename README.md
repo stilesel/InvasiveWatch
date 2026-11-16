@@ -51,3 +51,53 @@ All observation data is attributed to iNaturalist and its contributors.
 - **PapaParse:** CSV parsing.
 - **OpenStreetMap:** Map tiles.
 - **iNaturalist API:** Observation data.
+
+## Running Locally
+
+1. Clone the repository:
+
+   git clone https://github.com/YOUR-USERNAME/InvasiveWatch.git
+
+2. Navigate to the project directory:
+
+   cd InvasiveWatch
+
+3. Start a local HTTP server:
+
+   python -m http.server 8000
+
+4. Open the following address in your browser:
+
+   http://localhost:8000/website/
+
+##
+How to get place ids:
+https://www.inaturalist.org/observations/identify
+
+## Future Development
+
+Planned improvements include:
+
+- Expanding coverage beyond the Ann Arbor area.
+- Supporting additional invasive species.
+- Automating periodic data collection through the iNaturalist API.
+- Identifying newly observed species or changes in geographic distribution.
+- Developing automated reporting capabilities for invasive species
+  management organizations.
+- Incorporating feedback from local conservation organizations and
+  invasive species management professionals.
+
+  ## Contributing
+
+Contributions, suggestions, and feedback are welcome!
+
+If you are interested in improving InvasiveWatch, identifying additional
+data sources, or collaborating on invasive species monitoring,
+please feel free to open an issue or submit a pull request.
+
+## Contact
+
+For questions, suggestions, or collaboration opportunities, please
+open a GitHub issue or contact:
+
+[Eleanor Stiles / stilesel@umich.edu]
